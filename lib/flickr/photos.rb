@@ -115,7 +115,11 @@ class Flickr::Photos < Flickr::Base
   #     The type of media to search for. 'photo', 'video', or 'both' are allowed arguments, with 'both' being the default.
   # 
   def search(options)
-    options.merge!({:extras => "license,date_upload,date_taken,owner_name,icon_server,original_format,last_update,geo,tags,machine_tags,o_dims,views,media"})
+    if options[:extras].nil?
+      # let the caller choose which extras to query.
+      # search request can be twice faster when we ask for less options.
+      options[:extras] = "license,date_upload,date_taken,owner_name,icon_server,original_format,last_update,geo,tags,machine_tags,o_dims,views,media"
+    end
 
     rsp = @flickr.send_request('flickr.photos.search', options)
 
