@@ -243,6 +243,8 @@ class Flickr::Photos < Flickr::Base
      :tags => photo[:tags],
      :machine_tags => photo[:machine_tags],
      :o_dims => photo[:o_dims],
+     :o_height => photo[:o_height],
+     :o_width => photo[:o_width],
      :views => photo[:views].to_i,
      :media => photo[:media]}
   end
