@@ -53,17 +53,17 @@ module Flickr
     require 'rexml/document'
     
     def initialize(xml, namespace="")
-      if xml.class == REXML::Element or xml.class == Array
+      if xml.class == ::REXML::Element or xml.class == ::Array
         @element = xml
       else
-        @xml = REXML::Document.new(xml)
+        @xml = ::REXML::Document.new(xml)
         @element = @xml.root
       end
       @namespace = namespace
     end
 
     def each
-      @element.each {|e| yield CommonThread::XML::XmlMagic.new(e, @namespace)}
+      @element.each {|e| yield ::Flickr::XmlMagic.new(e, @namespace)}
     end
 
     def method_missing(method, selection=nil)
@@ -79,7 +79,7 @@ module Flickr
     end
     
     def to_s
-      if @element.class == Array
+      if @element.class == ::Array
         @element.collect{|e| e.text}.join
       else
         @element.text
@@ -87,18 +87,18 @@ module Flickr
     end
 
     def [](index, count = nil)
-      if index.is_a?(Fixnum) or index.is_a?(Bignum) or index.is_a?(Integer) or index.is_a?(Range) 
-        if @element.is_a?(Array)
+      if index.is_a?(::Fixnum) or index.is_a?(::Bignum) or index.is_a?(::Integer) or index.is_a?(::Range) 
+        if @element.is_a?(::Array)
           if count
-            CommonThread::XML::XmlMagic.new(@element[index, count], @namespace)
+            ::Flickr::XmlMagic.new(@element[index, count], @namespace)
           else
-            CommonThread::XML::XmlMagic.new(@element[index], @namespace)
+            ::Flickr::XmlMagic.new(@element[index], @namespace)
           end
         else
           nil
         end
-      elsif index.is_a?(Symbol)
-        if @element.is_a?(Array)
+      elsif index.is_a?(::Symbol)
+        if @element.is_a?(::Array)
           if @element.empty?
             nil
           else
@@ -113,7 +113,7 @@ module Flickr
     private
     def evaluate(name, selection)
       
-      if @element.is_a?(Array)
+      if @element.is_a?(::Array)
         elements = @element[0].get_elements(@namespace + name)
       else
         elements = @element.get_elements(@namespace + name)
@@ -125,7 +125,7 @@ module Flickr
         if selection == :count
           elements.length
         else
-          CommonThread::XML::XmlMagic.new(elements, @namespace)
+          ::Flickr::XmlMagic.new(elements, @namespace)
         end
       end
     end
