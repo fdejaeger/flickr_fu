@@ -283,7 +283,6 @@ class Flickr::Photos::Photo
     @notes
   end
 
-  protected
   def size_hash
     @size_hash ||= begin
       hash = {}
