@@ -2,7 +2,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{fotonauts-flickr_fu}
-  s.version = "0.3.4"
+  s.version = "0.3.7"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Ben Wyrosdick", "Maciej Bilas", "Fotonauts"]
@@ -10,12 +10,12 @@ Gem::Specification.new do |s|
   s.description = %q{Provides a ruby interface to flickr via the REST api}
   s.email = %q{ben@commonthread.com}
   s.extra_rdoc_files = [
-    "README"
+    "README.md"
   ]
   s.files = [
     ".gitignore",
      "LICENSE",
-     "README",
+     "README.md",
      "Rakefile",
      "VERSION.yml",
      "flickr_fu.gemspec",
@@ -82,7 +82,7 @@ Gem::Specification.new do |s|
      "spec/spec_helper.rb"
   ]
   s.homepage = %q{http://github.com/commonthread/flickr_fu}
-  s.rdoc_options = ["--main", "README"]
+  s.rdoc_options = ["--main", "README.md"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.3}
   s.summary = %q{Provides a ruby interface to flickr via the REST api}
