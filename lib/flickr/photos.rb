@@ -239,6 +239,7 @@ class Flickr::Photos < Flickr::Base
      :icon_server => photo[:icon_server],
      :original_format => photo[:originalformat],
      :updated_at => (Time.at(photo[:lastupdate].to_i) rescue nil),
+     :rotation => photo[:rotation],
      :geo => photo[:geo],
      :tags => photo[:tags],
      :machine_tags => photo[:machine_tags],
