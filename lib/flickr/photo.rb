@@ -1,8 +1,37 @@
 # wrapping class to hold an flickr photo
 class Flickr::Photos::Photo
-  attr_accessor :id, :owner, :secret, :server, :farm, :title, :is_public, :is_friend, :is_family # standard attributes
-  attr_accessor :license_id, :uploaded_at, :taken_at, :owner_name, :icon_server, :original_format, :updated_at, :geo, :tags, :machine_tags, :o_height, :o_width, :o_dims, :views, :media, :rotation # extra attributes
-  attr_accessor :info_added, :description, :original_secret, :owner_username, :owner_realname, :url_photopage, :notes # info attributes
+  attr_accessor :id, 
+    :owner, 
+    :secret, 
+    :server, 
+    :farm, 
+    :title, 
+    :is_public, 
+    :is_friend, 
+    :is_family # standard attributes
+  attr_accessor :license_id, 
+    :uploaded_at, 
+    :taken_at, 
+    :owner_name,
+    :owner_realname, 
+    :icon_server, 
+    :original_format, 
+    :updated_at, 
+    :geo, 
+    :tags, 
+    :machine_tags, 
+    :o_height, 
+    :o_width, 
+    :o_dims, 
+    :views, 
+    :media, 
+    :rotation # extra attributes
+  attr_accessor :info_added, 
+    :description, 
+    :original_secret, 
+    :owner_username, 
+    :url_photopage, 
+    :notes # info attributes
   attr_accessor :comments # comment attributes
   
   # create a new instance of a flickr photo.
@@ -18,7 +47,36 @@ class Flickr::Photos::Photo
       send("#{k}=", v)
     end
   end
+  def self.create_attributes(photo)
+    {:id => photo['id'].to_i, 
+      :secret => photo['secret'], 
+      :server => photo['server'], 
+      :farm => photo['farm'],
+      :license_id => photo['license'].to_i,
+      :rotation => photo['rotation'].to_i,
+      :uploaded_at => (Time.at(photo['dateuploaded'].to_i) rescue nil),
+      :owner => photo.owner['nsid'],
+      :owner_username => photo.owner['username'],
+      :owner_realname => photo.owner['realname'],
+      :icon_server => photo.owner['iconserver'],
+      :title => (photo.title.text rescue ''),
+      :description => photo.at_xpath("description").text, # description is a method of XML::Node, so we use at_xpath instead
+      :original_secret => photo['originalsecret'],
 
+      :is_public => photo.visibility['ispublic'].to_i, 
+      :is_friend => photo.visibility['isfriend'].to_i, 
+      :is_family => photo.visibility['isfamily'].to_i,
+
+      :taken_at => (Time.parse(photo.dates['taken']) rescue nil),
+      :updated_at => (Time.at(photo.dates['lastupdate'].to_i) rescue nil),
+      :tags => photo.tags.tag.map { |t|
+        { :id => t['id'], :author => t['author'], 
+          :raw => t['raw'], :machine_tag => t['machine_tag'],
+          :text => t.text }},
+
+      :url_photopage => photo.urls.url.text
+   }
+  end
   # Alias to image_url method
   def url(size = :medium)
     image_url(size)
@@ -271,8 +329,8 @@ class Flickr::Photos::Photo
       
       _sizes = []
       rsp.sizes.size.each do |size|
-        _sizes << Flickr::Photos::Size.new(:label => size[:label], :width => size[:width],
-          :height => size[:height], :source => size[:source], :url => size[:url])
+        _sizes << Flickr::Photos::Size.new(:label => size[:label], :width => size[:width].to_i,
+          :height => size[:height].to_i, :source => size[:source], :url => size[:url])
       end
       _sizes
     end
@@ -319,25 +377,23 @@ class Flickr::Photos::Photo
       rsp = @flickr.send_request('flickr.photos.getInfo', :photo_id => self.id, :secret => self.secret)
 
       self.info_added = true
-      self.description = rsp.photo.description.to_s.strip
-      self.original_secret = rsp.photo[:originalsecret]
-      self.owner_username = rsp.photo.owner[:username]
-      self.owner_realname = rsp.photo.owner[:realname]
-      self.url_photopage = rsp.photo.urls.url.to_s
-      self.comment_count = rsp.photo.comments.to_s.to_i
+
+      ::Flickr::Photos::Photo.create_attributes(rsp.photo).each do |k,v|
+       send("#{k}=", v)
+      end
 
       self.notes = []
 
-      rsp.photo.notes.note.each do |note|
+      rsp.photo.notes.each do |note|
         self.notes << Flickr::Photos::Note.new(:id => note[:id],
-		  :note => note.to_s,
-		  :author => note[:author],
-		  :author_name => note[:authorname],
-		  :x => note[:x],
-		  :y => note[:y],
-		  :width => note[:w],
-		  :height => note[:h])
-      end if rsp.photo.notes.note
+          :note => note.to_s,
+          :author => note[:author],
+          :author_name => note[:authorname],
+          :x => note[:x],
+          :y => note[:y],
+          :width => note[:w],
+          :height => note[:h])
+      end
     end
   end
 end

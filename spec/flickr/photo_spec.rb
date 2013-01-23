@@ -37,7 +37,7 @@ describe Flickr::Photos::Photo do
     it "should return the description" do
       @flickr.should_receive(:request_over_http).and_return(@info_xml)
       @photo.description.should ==
-          "The last picture from a quite old event. The demolition of the best known hotel in Rzeszów called Hotel Rzeszów."
+          "\nThe last picture from a quite old event. The demolition of the best known hotel in Rzeszów called Hotel Rzeszów.\n\t\t"
     end
   end
 

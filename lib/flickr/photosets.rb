@@ -40,8 +40,8 @@ class Flickr::Photosets < Flickr::Base
       {
         :id => photoset[:id],
         :num_photos => photoset[:photos],
-        :title => photoset.title.to_s,
-        :description => photoset.description.to_s
+        :title => photoset.title.text.to_s,
+        :description => photoset.at_xpath("description").text
        }
     end
 

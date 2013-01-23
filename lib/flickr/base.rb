@@ -81,19 +81,20 @@ module Flickr
     # * endpoint (Optional)
     #     url of the api endpoint
     # 
+    require 'nokogiri'
     def send_request(method, options = {}, http_method = :get, endpoint = REST_ENDPOINT)
       options.merge!(:api_key => @api_key, :method => method)
       sign_request(options)
       
       rsp = request_over_http(options, http_method, endpoint)
       
-      rsp = '<rsp stat="ok"></rsp>' if rsp == ""
-      xm = XmlMagic.new(rsp)
-      
-      if xm[:stat] == 'ok'
-        xm
+      rsp = '<?xml version="1.0" encoding="utf-8" ?><rsp stat="ok"></rsp>' if rsp == ""
+      xm = Nokogiri.Slop(rsp, nil, nil, Nokogiri::XML::ParseOptions::NOBLANKS)
+
+      if xm.rsp['stat'] == 'ok'
+        xm.rsp
       else
-        raise Flickr::Errors.error_for(xm.err[:code].to_i, xm.err[:msg])
+        Flickr::Errors.error_for(xm.rsp.err["code"].to_i, xm.rsp.err["msg"])
       end
     end
     

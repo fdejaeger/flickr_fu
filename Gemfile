@@ -15,6 +15,6 @@ group :development do
 end
 
 gem "mime-types"
-gem "xml-magic"
+gem "nokogiri"
 
 #gemspec

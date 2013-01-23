@@ -32,8 +32,8 @@ class Flickr::Urls < Flickr::Base
 
   def lookup_user url
     rsp = @flickr.send_request('flickr.urls.lookupUser', {:url => url})
-    user_id = UserLookupResult.new(rsp.user[:id])
-    user_id.username = rsp.user.username
+    user_id = UserLookupResult.new(rsp.user['id'])
+    user_id.username = rsp.user.username.text
     user_id
   end
 
