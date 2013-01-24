@@ -52,7 +52,7 @@ class Flickr::Photos::Photo
       :secret => photo['secret'], 
       :server => photo['server'], 
       :farm => photo['farm'],
-      :license_id => photo['license'].to_i,
+      :license_id => photo['license'],
       :rotation => photo['rotation'].to_i,
       :uploaded_at => (Time.at(photo['dateuploaded'].to_i) rescue nil),
       :owner => photo.owner['nsid'],
