@@ -48,12 +48,12 @@ class Flickr::Photos::Photo
     end
   end
   def self.create_attributes(photo)
-    {:id => photo['id'].to_i, 
+    {:id => photo['id'], 
       :secret => photo['secret'], 
       :server => photo['server'], 
       :farm => photo['farm'],
       :license_id => photo['license'],
-      :rotation => photo['rotation'].to_i,
+      :rotation => photo['rotation'],
       :uploaded_at => (Time.at(photo['dateuploaded'].to_i) rescue nil),
       :owner => photo.owner['nsid'],
       :owner_username => photo.owner['username'],
@@ -62,6 +62,8 @@ class Flickr::Photos::Photo
       :title => (photo.title.text rescue ''),
       :description => photo.at_xpath("description").text, # description is a method of XML::Node, so we use at_xpath instead
       :original_secret => photo['originalsecret'],
+      :original_format => photo['originalformat'],
+
 
       :is_public => photo.visibility['ispublic'].to_i, 
       :is_friend => photo.visibility['isfriend'].to_i, 
@@ -69,7 +71,7 @@ class Flickr::Photos::Photo
 
       :taken_at => (Time.parse(photo.dates['taken']) rescue nil),
       :updated_at => (Time.at(photo.dates['lastupdate'].to_i) rescue nil),
-      :tags => photo.tags.tag.map { |t|
+      :tags => (photo.tags.xpath('tag') || []).map { |t|
         { :id => t['id'], :author => t['author'], 
           :raw => t['raw'], :machine_tag => t['machine_tag'],
           :text => t.text }},
