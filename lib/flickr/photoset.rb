@@ -22,12 +22,10 @@ class Flickr::Photosets::Photoset
     def collect_photos(rsp)
       photos = []
       return photos unless rsp
-      if rsp.photoset.photo
-        rsp.photoset.photo.each do |photo|
-          attributes = create_attributes(photo)
-          photos << Flickr::Photos::Photo.new(@flickr,attributes)
-        end
-      end
+      rsp.photos.xpath("photo").each do |photo|
+        attributes = create_attributes(photo)
+        photos << Flickr::Photos::Photo.new(@flickr,attributes)
+      end if rsp.photos.at_xpath("photo")
       return photos
     end
 

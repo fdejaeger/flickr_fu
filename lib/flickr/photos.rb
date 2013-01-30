@@ -131,11 +131,10 @@ class Flickr::Photos < Flickr::Base
                                 :api => self,
                                 :method => 'search',
                                 :options => options) do |photos|
-      rsp.photos.photo.each do |photo|
+      rsp.photos.xpath("photo").each do |photo|
         attributes = create_attributes(photo)
-
         photos << Photo.new(@flickr, attributes)
-      end if rsp.photos.photo
+      end if rsp.photos.at_xpath("photo")
     end
   end
     
@@ -164,11 +163,11 @@ class Flickr::Photos < Flickr::Base
                                 :photos => [], :api => self,
                                 :method => 'flickr.photos.getRecent',
                                 :options => options) do |photos|
-      rsp.photos.photo.each do |photo|
+      rsp.photos.xpath("photo").each do |photo|
         attributes = create_attributes(photo)
 
         photos << Photo.new(@flickr, attributes)
-      end if rsp.photos.photo
+      end if rsp.photos.at_xpath("photo")
     end
   end
   
@@ -185,12 +184,12 @@ class Flickr::Photos < Flickr::Base
                                 :api => self,
                                 :method => 'flickr.interestingness.getList',
                                 :options => options) do |photos|
-      rsp.photos.photo.each do |photo|
+      rsp.photos.xpath("photo").each do |photo|
         attributes = create_attributes(photo)
 
 
         photos << Photo.new(@flickr, attributes)
-      end if rsp.photos.photo
+      end if rsp.photos.at_xpath("photo")
     end
   end
   

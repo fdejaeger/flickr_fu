@@ -51,10 +51,10 @@ class Flickr::People::Person
                                 :api => self,
                                 :method => 'public_photos',
                                 :options => options) do |photos|
-      rsp.photos.photo.each do |photo|
+      rsp.photos.xpath("photo").each do |photo|
         attributes = Flickr::Photos.create_attributes(photo)
         photos << Flickr::Photos::Photo.new(@flickr, attributes)
-      end if rsp.photos.photo
+      end if rsp.photos.at_xpath("photo")
     end
   end
 end
