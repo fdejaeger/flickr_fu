@@ -74,7 +74,7 @@ class Flickr::Auth < Flickr::Base
     elsif pass_through
       rsp = @flickr.send_request('flickr.auth.getToken', {:frob => self.frob})
 
-      Token.new(:token => rsp.auth.token.to_s, :permisions => rsp.auth.perms.to_s, :user_id => rsp.auth.user[:nsid], :username => rsp.auth.user[:username], :user_real_name => rsp.auth.user[:fullname])
+      Token.new(:token => rsp.auth.token.text, :permisions => rsp.auth.perms.to_s, :user_id => rsp.auth.user[:nsid], :username => rsp.auth.user[:username], :user_real_name => rsp.auth.user[:fullname])
     end
   end
 end

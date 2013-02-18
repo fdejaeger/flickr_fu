@@ -19,7 +19,7 @@ class Flickr::People < Flickr::Base
                         :icon_farm => rsp.person[:iconfarm],
                         :username => rsp.person.username.to_s,
                         :realname => rsp.person.realname.to_s,
-                        :mbox_sha1sum => rsp.person.mbox_sha1sum.to_s,
+                        :mbox_sha1sum => (rsp.person.mbox_sha1sum.to_s rescue nil),
                         :location => rsp.person.location.to_s,
                         :photos_url => rsp.person.photosurl.to_s,
                         :profile_url => rsp.person.profileurl.to_s,
